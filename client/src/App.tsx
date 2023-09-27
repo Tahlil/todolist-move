@@ -4,7 +4,7 @@ import logo from "./logo.svg";
 import { Provider, Network } from "aptos";
 import "./App.css";
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
-import { Layout, Row, Col } from "antd";
+import { Layout, Row, Col, Button } from "antd";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 const provider = new Provider(Network.DEVNET);
@@ -31,24 +31,26 @@ function App() {
   }, [account?.address]);
   return (
     <>
-      {" "}
-      <Layout>
-        {" "}
-        <Row align="middle">
-          {" "}
-          <Col span={10} offset={2}>
-            {" "}
-            <h1>Our todolist</h1>{" "}
-          </Col>{" "}
-          <Col span={12} style={{ textAlign: "right", paddingRight: "200px" }}>
-            {" "}
-            <Col span={12} style={{ textAlign: "right", paddingRight: "200px" }}>
-              <WalletSelector />
-            </Col>
-          </Col>{" "}
-        </Row>{" "}
-      </Layout>{" "}
-    </>
+    <Layout>
+      <Row align="middle">
+        <Col span={10} offset={2}>
+          <h1>Our todolist</h1>
+        </Col>
+        <Col span={12} style={{ textAlign: "right", paddingRight: "200px" }}>
+          <WalletSelector />
+        </Col>
+      </Row>
+    </Layout>
+    {!accountHasList && (
+      <Row gutter={[0, 32]} style={{ marginTop: "2rem" }}>
+        <Col span={8} offset={8}>
+          <Button block type="primary" style={{ height: "40px", backgroundColor: "#3f67ff" }}>
+            Add new list
+          </Button>
+        </Col>
+      </Row>
+    )}
+  </>
   );
 }
 
