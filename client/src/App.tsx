@@ -8,25 +8,53 @@ import { Layout, Row, Col, Button, Spin } from "antd";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 const provider = new Provider(Network.DEVNET);
+type Task = {
+  address: string;
+  completed: boolean;
+  content: string;
+  task_id: string;
+};
 
 function App() {
   const moduleAddress =
   "0xaeb489f1b55ebb7b00926879ea2dceaf7bac94556649b83e1dd1a2bf41c017c8";
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [accountHasList, setAccountHasList] = useState<boolean>(false);
   const [transactionInProgress, setTransactionInProgress] = useState<boolean>(false);
+
+  
+
   const fetchList = async () => {
     if (!account) return [];
-    // change this to be your module account address
+  try {
+    const TodoListResource = await provider.getAccountResource(
+      account?.address,
+      `${moduleAddress}::todolist::TodoList`
+    );
+    setAccountHasList(true);
+        // tasks table handle
+    const tableHandle = (TodoListResource as any).data.tasks.handle;
+        // tasks table counter
+    const taskCounter = (TodoListResource as any).data.task_counter;
 
-    try {
-      const TodoListResource = await provider.getAccountResource(
-        account.address,
-        `${moduleAddress}::todolist::TodoList`
-      );
-      setAccountHasList(true);
-    } catch (e: any) {
-      setAccountHasList(false);
+    let tasks = [];
+    let counter = 1;
+    while (counter <= taskCounter) {
+      const tableItem = {
+        key_type: "u64",
+        value_type: `${moduleAddress}::todolist::Task`,
+        key: `${counter}`,
+      };
+      const task = await provider.getTableItem(tableHandle, tableItem);
+      tasks.push(task);
+      counter++;
     }
+    
+        // set tasks in local state
+    setTasks(tasks);
+  } catch (e: any) {
+    setAccountHasList(false);
+  }
   };
 
   const addNewList = async () => {
