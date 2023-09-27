@@ -1,7 +1,9 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import { Layout, Row, Col } from "antd";
+import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 
 function App() {
   return (
@@ -17,7 +19,9 @@ function App() {
           </Col>{" "}
           <Col span={12} style={{ textAlign: "right", paddingRight: "200px" }}>
             {" "}
-            <h1>Connect Wallet</h1>{" "}
+            <Col span={12} style={{ textAlign: "right", paddingRight: "200px" }}>
+              <WalletSelector />
+            </Col>
           </Col>{" "}
         </Row>{" "}
       </Layout>{" "}
