@@ -4,7 +4,7 @@ import logo from "./logo.svg";
 import { Provider, Network } from "aptos";
 import "./App.css";
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
-import { Layout, Row, Col, Button, Spin } from "antd";
+import { Layout, Row, Col, Button, Spin, List, Checkbox } from "antd";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 const provider = new Provider(Network.DEVNET);
@@ -98,20 +98,48 @@ function App() {
           </Col>
         </Row>
       </Layout>
-      {!accountHasList && (
-        <Row gutter={[0, 32]} style={{ marginTop: "2rem" }}>
-          <Col span={8} offset={8}>
-            <Button
-              onClick={addNewList}
-              block
-              type="primary"
-              style={{ height: "40px", backgroundColor: "#3f67ff" }}
-            >
-              Add new list
-            </Button>
-          </Col>
-        </Row>
-      )}
+      {
+  !accountHasList ? (
+    <Row gutter={[0, 32]} style={{ marginTop: "2rem" }}>
+      <Col span={8} offset={8}>
+        <Button
+          disabled={!account}
+          block
+          onClick={addNewList}
+          type="primary"
+          style={{ height: "40px", backgroundColor: "#3f67ff" }}
+        >
+          Add new list
+        </Button>
+      </Col>
+    </Row>
+  ) : (
+    <Row gutter={[0, 32]} style={{ marginTop: "2rem" }}>
+      <Col span={8} offset={8}>
+        {tasks && (
+          <List
+            size="small"
+            bordered
+            dataSource={tasks}
+            renderItem={(task: any) => (
+              <List.Item actions={[<Checkbox />]}>
+                <List.Item.Meta
+                  title={task.content}
+                  description={
+                    <a
+                      href={`https://explorer.aptoslabs.com/account/${task.address}/`}
+                      target="_blank"
+                    >{`${task.address.slice(0, 6)}...${task.address.slice(-5)}`}</a>
+                  }
+                />
+              </List.Item>
+            )}
+          />
+        )}
+      </Col>
+    </Row>
+  );
+}
       <Spin spinning={transactionInProgress}>
       {!accountHasList && (
         <Row gutter={[0, 32]} style={{ marginTop: "2rem" }}>
