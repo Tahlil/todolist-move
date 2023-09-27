@@ -107,8 +107,6 @@ function App() {
     }
   };
 
-
-
   const addNewList = async () => {
     if (!account) return [];
     setTransactionInProgress(true);
@@ -127,6 +125,47 @@ function App() {
       setAccountHasList(true);
     } catch (error: any) {
       setAccountHasList(false);
+    } finally {
+      setTransactionInProgress(false);
+    }
+  };
+
+  const onCheckboxChange = async (
+    event: CheckboxChangeEvent,
+    taskId: string
+  ) => {
+    if (!account) return;
+    if (!event.target.checked) return;
+    setTransactionInProgress(true);
+    const payload = {
+      type: "entry_function_payload",
+      function:
+        `${moduleAddress}::todolist::complete_task`,
+      type_arguments: [],
+      arguments: [taskId],
+    };
+
+    try {
+      // sign and submit transaction to chain
+      const response = await signAndSubmitTransaction(payload);
+      // wait for transaction
+      await provider.waitForTransaction(response.hash);
+
+      setTasks((prevState) => {
+        const newState = prevState.map((obj) => {
+          // if task_id equals the checked taskId, update completed property
+          if (obj.task_id === taskId) {
+            return { ...obj, completed: true };
+          }
+
+          // otherwise return object as is
+          return obj;
+        });
+
+        return newState;
+      });
+    } catch (error: any) {
+      console.log("error", error);
     } finally {
       setTransactionInProgress(false);
     }
@@ -189,7 +228,9 @@ function App() {
                 bordered
                 dataSource={tasks}
                 renderItem={(task: any) => (
-                  <List.Item actions={[<Checkbox />]}>
+                  <List.Item actions={[
+                    <Checkbox onChange={(event) => onCheckboxChange(event, task.task_id)}/>
+                  ]}>
                     <List.Item.Meta
                       title={task.content}
                       description={
