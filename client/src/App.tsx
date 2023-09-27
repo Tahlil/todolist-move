@@ -7,6 +7,7 @@ import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import { Layout, Row, Col, Button, Spin, List, Checkbox, Input } from "antd";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
 const provider = new Provider(Network.DEVNET);
 type Task = {
   address: string;
