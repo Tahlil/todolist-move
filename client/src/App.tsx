@@ -4,7 +4,7 @@ import logo from "./logo.svg";
 import { Provider, Network } from "aptos";
 import "./App.css";
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
-import { Layout, Row, Col, Button, Spin, List, Checkbox } from "antd";
+import { Layout, Row, Col, Button, Spin, List, Checkbox, Input } from "antd";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 const provider = new Provider(Network.DEVNET);
@@ -115,6 +115,21 @@ function App() {
     </Row>
   ) : (
     <Row gutter={[0, 32]} style={{ marginTop: "2rem" }}>
+       <Col span={8} offset={8}>
+      <Input.Group compact>
+        <Input
+          style={{ width: "calc(100% - 60px)" }}
+          placeholder="Add a Task"
+          size="large"
+        />
+        <Button
+          type="primary"
+          style={{ height: "40px", backgroundColor: "#3f67ff" }}
+        >
+          Add
+        </Button>
+      </Input.Group>
+    </Col>
       <Col span={8} offset={8}>
         {tasks && (
           <List
