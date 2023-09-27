@@ -228,9 +228,21 @@ function App() {
                 bordered
                 dataSource={tasks}
                 renderItem={(task: any) => (
-                  <List.Item actions={[
-                    <Checkbox onChange={(event) => onCheckboxChange(event, task.task_id)}/>
-                  ]}>
+                  <List.Item
+                  actions={[
+                    <div>
+                      {task.completed ? (
+                        <Checkbox defaultChecked={true} disabled />
+                      ) : (
+                        <Checkbox
+                          onChange={(event) =>
+                            onCheckboxChange(event, task.task_id)
+                          }
+                        />
+                      )}
+                    </div>,
+                  ]}
+                >
                     <List.Item.Meta
                       title={task.content}
                       description={
